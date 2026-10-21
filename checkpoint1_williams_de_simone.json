@@ -1,0 +1,252 @@
+{
+  "name": "Clase 1 - Agente de Triaje de Soporte",
+  "nodes": [
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "USÁ esta herramienta para registrar prospectos comerciales (leads) en Google Sheets únicamente cuando el usuario haya proporcionado sus datos de contacto y detalles sobre el servicio o automatización que necesita. Antes de ejecutarla, analizá la información, determiná el tipo de proyecto, clasificá el interés (Alto, Medio o Bajo) y generá un resumen del requerimiento. No ejecutes la herramienta para consultas genéricas que no constituyan un lead potencial.\n\nUSÁ esta herramienta cuando el usuario haya proporcionado como mínimo:\n- un medio de contacto;\n- un problema que pueda ser categorizado;\n- una descripción suficiente del inconveniente.\n\nAntes de ejecutar la herramienta:\n1. Identificá el problema principal reportado por el usuario.\n2. Determiná la categoría del problema.\n3. Clasificá la prioridad como Alta, Media o Baja.\n4. Generá un resumen breve y operativo del incidente.\n5. Definí una próxima acción recomendada.\n\nREGLAS DE PRIORIDAD:\n- ALTA: bloqueo total, impacto en facturación, caída del servicio, pérdida de datos, incidente de seguridad o cliente estratégico.\n- MEDIA: el problema afecta el trabajo del usuario, pero existe una alternativa temporal o no produce un bloqueo completo.\n- BAJA: consulta general, problema menor o solicitud sin impacto inmediato en la operación.\n\nCuando estén disponibles los datos mínimos, ejecutá esta herramienta exactamente UNA vez.\n\nNo inventes información faltante.\nSi el nombre o la empresa no fueron informados, utilizá \"No informado\".\n\nSi el mensaje contiene varios problemas, registrá como problema principal el de mayor impacto e incluí los demás en el resumen.\n\nNo uses esta herramienta para consultas comerciales, legales o administrativas que estén fuera del ámbito de soporte técnico.",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ZQhJ1JqRoliMkhmEraTwUZuFxrT3IiM8UUPrSdEhvAw",
+          "mode": "list",
+          "cachedResultName": "Leads_Comerciales_IA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZQhJ1JqRoliMkhmEraTwUZuFxrT3IiM8UUPrSdEhvAw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lZq0a6wEhDXrkvZBXS0s71adOD0yC-Q9E0Osa5YCuyI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "=Nombre\n{{ $fromAI('Nombre', '', 'string') }}",
+            "Contacto": "={{ $fromAI('Contacto', ``, 'string') }}",
+            "Empresa": "={{ $fromAI('Empresa', ``, 'string') }}",
+            "Resumen": "={{ $fromAI('Resumen', ``, 'string') }}",
+            "Proyecto": "={{ $fromAI('Proyecto', '', 'string') }}",
+            "interes": "={{ $fromAI('interes', '', 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Contacto",
+              "displayName": "Contacto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Empresa",
+              "displayName": "Empresa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Proyecto",
+              "displayName": "Proyecto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "interes",
+              "displayName": "interes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Resumen",
+              "displayName": "Resumen",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        464,
+        272
+      ],
+      "id": "020c46c8-9c28-4c24-b5a0-bd8786192f68",
+      "name": "Registrar_Ticket_Soporte",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9xFoLRraHzWpqln0",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "[ROL Y ÁMBITO]\nSos un Agente de Calificación de Leads Comerciales para una agencia de automatización y desarrollo digital. Tu único ámbito es procesar mensajes iniciales de potenciales clientes, evaluar su nivel de interés, extraer sus datos de contacto y registrar un lead calificado en el CRM/Hoja de cálculo.\n\nNO tenés autorización para: cerrar contratos, fijar precios definitivos, prometer descuentos especiales, ofrecer servicios fuera del catálogo de automatización, coordinar reuniones directamente sin validación humana o modificar datos confidenciales.\n\n[OBJETIVO OPERATIVO]\nConvertir cada consulta comercial entrante en un registro estructurado que contenga: Nombre del cliente, Medio de contacto, Empresa, Tipo de proyecto consultado, Presupuesto estimativo (si lo mencionó) y Próxima acción comercial recomendada.\n\n[REGLAS DE USO DE HERRAMIENTAS]\n- Usá la herramienta \"Registrar_Lead_Comercial\" SOLO cuando el usuario haya aportado datos suficientes: un medio de contacto y una descripción clara de su necesidad o proyecto.\n- Si falta información fundamental para calificarlo, realizá una única pregunta estratégica para obtenerla antes de registrar.\n- No inventes datos bajo ninguna circunstancia. Si un campo no fue provisto, completalo como \"No informado\".\n- Clasificá el nivel de interés o prioridad como: Alto (proyecto inmediato y presupuesto definido), Medio (evaluando opciones) o Bajo (mera consulta exploratoria).\n\n[PROTOCOLO DE ESCALAMIENTO / GUARDRAILS]\n- Si el cliente menciona un presupuesto corporativo alto, urgencia extrema o un proyecto de gran envergadura, marcalo con prioridad Alta y recomendá contacto comercial prioritario inmediato.\n- Si el usuario solicita servicios ajenos al desarrollo de software, IA o automatización, denegá amablemente el alcance y cerrá el ciclo informativo.\n\n[ESTILO]\n- Escribí en español neutro profesional, comercial y persuasivo.\n- No uses lenguaje inclusivo con terminaciones en -e, -x o @.\n- Sé claro, directo y enfocado en la conversión.",
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        288,
+        64
+      ],
+      "id": "7c913b0c-a0dd-4354-8dd5-c15a82f7d9f3",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        256,
+        288
+      ],
+      "id": "a03e8ca8-079e-40f2-80c8-4a39a89b4a45",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "93QhWad9URqFjW5X",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "mastermovies95@hotmail.com",
+        "subject": "Reporte de Ejecución - Checkpoint 1 (Agente Comercial)",
+        "message": "==🤖 Reporte de observabilidad - Agente Comercial:\\n\\n{{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        640,
+        64
+      ],
+      "id": "cf50ddd1-84a5-4265-aec0-d067763eda0d",
+      "name": "Send a message",
+      "webhookId": "94ae7850-70de-48e1-a953-2511e80619e4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "oeMxAlvWFpSxkrre",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        32,
+        64
+      ],
+      "id": "f3e87e45-b92b-455e-b747-70f606ba8c76",
+      "name": "When chat message received",
+      "webhookId": "e39808e6-9a1b-41e2-acc1-fa459a5121ff"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Registrar_Ticket_Soporte": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ca61ec99-e049-4988-a395-0486fb7b967d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "77b2187404c1d829a1e3f08d216d126d4d26fd87586ebeed19c64bd7d9c0ae8b"
+  },
+  "nodeGroups": [],
+  "id": "cQ9DiOd3Q2qG4XJY",
+  "tags": []
+}
